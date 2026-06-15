@@ -1,0 +1,5 @@
+{
+  "name": "upflip",
+  "version": "1.0.0",
+  "description": "Iterative preference-based prompt refinement with sentence-level feedback"
+}
