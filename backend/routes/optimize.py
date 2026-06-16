@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from models.schemas import (
     CreateSessionRequest,
     FeedbackRequest,
@@ -16,6 +16,23 @@ from services.skill_loader import (
 from store import store
 
 router = APIRouter()
+
+# Headers the frontend sends with the user's provider credentials.
+_H_KEY = "X-API-Key"
+_H_BASE = "X-API-Base-URL"
+_H_MODEL = "X-API-Model"
+
+
+def _get_api_key(request: Request) -> str | None:
+    return request.headers.get(_H_KEY)
+
+
+def _get_base_url(request: Request) -> str | None:
+    return request.headers.get(_H_BASE)
+
+
+def _get_model(request: Request) -> str | None:
+    return request.headers.get(_H_MODEL)
 
 
 class CreateSkillRequest(BaseModel):
@@ -57,9 +74,14 @@ async def remove_skill(skill_id: str):
 
 
 @router.post("/sessions", status_code=201, response_model=SessionOut)
-async def create_session(req: CreateSessionRequest):
+async def create_session(req: CreateSessionRequest, request: Request):
     try:
-        session = start_session(req.idea, req.scenario, req.custom_rules, req.skill_key)
+        session = start_session(
+            req.idea, req.scenario, req.custom_rules, req.skill_key,
+            api_key=_get_api_key(request),
+            base_url=_get_base_url(request),
+            model=_get_model(request),
+        )
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
@@ -76,7 +98,7 @@ async def get_session(session_id: str):
 
 
 @router.post("/sessions/{session_id}/feedback", response_model=SessionOut)
-async def submit_feedback(session_id: str, req: FeedbackRequest):
+async def submit_feedback(session_id: str, req: FeedbackRequest, request: Request):
     session = store.get(session_id)
     if session is None:
         raise HTTPException(status_code=404, detail="会话不存在或已过期")
@@ -89,6 +111,9 @@ async def submit_feedback(session_id: str, req: FeedbackRequest):
             selected_candidate=req.selected_candidate,
             sentences=sentences,
             comment=req.comment,
+            api_key=_get_api_key(request),
+            base_url=_get_base_url(request),
+            model=_get_model(request),
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

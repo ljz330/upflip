@@ -1768,6 +1768,154 @@
   }
   .toast.show { opacity: 1; }
 
+  /* ── Login modal ── */
+  .login-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-overlay.visible { display: flex; }
+  .login-modal {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px 28px 28px;
+    width: 420px;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: loginIn 0.25s ease;
+  }
+  @keyframes loginIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .login-modal h2 {
+    font-family: 'Fustat', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #292524;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .login-modal .login-sub {
+    font-size: 13px;
+    color: #78716c;
+    margin-bottom: 24px;
+  }
+
+  /* Provider cards */
+  .login-providers {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .login-prov-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 8px 12px;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    text-align: center;
+    background: #fafaf9;
+  }
+  .login-prov-card:hover { transform: translateY(-2px); }
+  .login-prov-card.selected {
+    border-color: #F5A623;
+    box-shadow: 0 0 0 3px rgba(245,166,35,0.1);
+    background: #fff8f0;
+  }
+  .login-prov-card .prov-icon {
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .prov-icon.p-deepseek { background: #F5A623; color: #fff; }
+  .prov-icon.p-openai   { background: #10a37f; color: #fff; }
+  .prov-icon.p-custom   { background: #78716c; color: #fff; }
+  .login-prov-card .prov-label {
+    font-size: 12px; font-weight: 500; color: #292524;
+  }
+
+  /* Form fields */
+  .login-field {
+    margin-bottom: 16px;
+  }
+  .login-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #78716c;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .login-field select,
+  .login-field input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    background: #fafaf9;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .login-field select:focus,
+  .login-field input:focus { border-color: #F5A623; }
+  .login-field input::placeholder { color: #a8a29e; }
+  .login-field .field-hint {
+    font-size: 11px; color: #a8a29e; margin-top: 4px;
+  }
+
+  /* Buttons row */
+  .login-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  .login-btn {
+    font-size: 13px; font-weight: 500;
+    padding: 9px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .login-btn-cancel {
+    background: #f5f5f4; color: #78716c;
+  }
+  .login-btn-cancel:hover { background: #e7e5e4; }
+  .login-btn-save {
+    background: #F5A623; color: #fff;
+  }
+  .login-btn-save:hover { background: #D4951E; }
+  .login-btn-logout {
+    background: none; color: #dc2626; font-size: 12px;
+    border: none; cursor: pointer; text-decoration: underline;
+  }
+
+  /* Logged-in state for the top nav button */
+  .tn-cta.logged-in {
+    background: transparent;
+    color: #16a34a;
+    border: 1.5px solid #16a34a;
+  }
+  .tn-cta.logged-in:hover { background: #f0fdf4; }
+
   /* Back to selection link */
   #backToSelect {
     font-size: 0.8rem;
@@ -1795,6 +1943,52 @@
   <span class="loading-text" id="loadingText">正在生成方案…</span>
 </div>
 
+<!-- ═══════════ Login modal ═══════════ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-modal">
+    <h2>登录</h2>
+    <p class="login-sub">选择你的大模型供应商并填入 API Key</p>
+
+    <div class="login-providers" id="loginProviders">
+      <div class="login-prov-card selected" data-provider="deepseek">
+        <div class="prov-icon p-deepseek">D</div>
+        <div class="prov-label">DeepSeek</div>
+      </div>
+      <div class="login-prov-card" data-provider="openai">
+        <div class="prov-icon p-openai">O</div>
+        <div class="prov-label">OpenAI</div>
+      </div>
+      <div class="login-prov-card" data-provider="custom">
+        <div class="prov-icon p-custom">+</div>
+        <div class="prov-label">自定义</div>
+      </div>
+    </div>
+
+    <div class="login-field">
+      <label>模型</label>
+      <select id="loginModelSelect"></select>
+      <input type="text" id="loginModelInput" placeholder="输入模型名称，如 gpt-4o, claude-3-opus…" style="display:none">
+    </div>
+
+    <div class="login-field" id="loginBaseUrlField" style="display:none">
+      <label>Base URL（OpenAI 兼容接口地址）</label>
+      <input type="text" id="loginBaseUrlInput" placeholder="https://api.openai.com/v1">
+      <div class="field-hint">任何兼容 OpenAI SDK 的 API 地址</div>
+    </div>
+
+    <div class="login-field">
+      <label>API Key</label>
+      <input type="password" id="loginApiKeyInput" placeholder="粘贴你的 API Key…">
+    </div>
+
+    <div class="login-actions">
+      <button class="login-btn login-btn-logout" id="loginLogoutBtn" style="display:none;margin-right:auto">退出登录</button>
+      <button class="login-btn login-btn-cancel" id="loginCancelBtn">取消</button>
+      <button class="login-btn login-btn-save" id="loginSaveBtn">保存并登录</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════ Landing page ═══════════ -->
 <div class="landing-wrapper visible" id="landingWrapper">
 
@@ -1806,7 +2000,7 @@
           <span></span><span></span>
         </div>
         <div class="tn-logo">UPFLIP</div>
-        <button class="tn-cta" type="button">登录</button>
+        <button class="tn-cta" type="button" id="tnLoginBtn">登录</button>
       </div>
       <div class="top-nav-content">
         <div class="tn-card" style="background:#1B1722;">
@@ -1930,7 +2124,7 @@
         <span class="sb-skill-label" id="sbSkillLabel">默认 Clean Code 规范</span>
         <div class="sb-ai-badge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-          <span>Powered by DeepSeek</span>
+          <span id="sbPoweredBy">Powered by DeepSeek</span>
         </div>
       </div>
 
@@ -2229,6 +2423,82 @@
   const skmError = $('skmError');
   const sbSkillLabel = $('sbSkillLabel');
   const heroCharCount = $('heroCharCount');
+  const sbPoweredBy = $('sbPoweredBy');
+
+  // ── Provider / Login system ──
+  const PROVIDERS = {
+    deepseek: {
+      id: 'deepseek', name: 'DeepSeek', baseUrl: 'https://api.deepseek.com',
+      models: ['deepseek-chat', 'deepseek-reasoner'],
+      defaultModel: 'deepseek-chat',
+    },
+    openai: {
+      id: 'openai', name: 'OpenAI', baseUrl: 'https://api.openai.com/v1',
+      models: ['gpt-4o', 'gpt-4o-mini', 'gpt-3.5-turbo'],
+      defaultModel: 'gpt-4o-mini',
+    },
+    custom: {
+      id: 'custom', name: '自定义', baseUrl: '',
+      models: [],
+      defaultModel: '',
+    },
+  };
+
+  const STORAGE_PREFIX = 'upflip_';
+
+  function storageGet(key) {
+    try { return localStorage.getItem(STORAGE_PREFIX + key) || null; }
+    catch { return null; }
+  }
+  function storageSet(key, val) {
+    try { localStorage.setItem(STORAGE_PREFIX + key, val); }
+    catch { }
+  }
+  function storageDel(key) {
+    try { localStorage.removeItem(STORAGE_PREFIX + key); }
+    catch { }
+  }
+
+  function getLoginState() {
+    const pid = storageGet('provider') || 'deepseek';
+    const provider = PROVIDERS[pid] || PROVIDERS.deepseek;
+    const apiKey = storageGet('api_key') || null;
+    const model = storageGet('model') || provider.defaultModel;
+    const baseUrl = storageGet('base_url') || provider.baseUrl;
+    return { provider: pid, apiKey, model, baseUrl, isLoggedIn: !!apiKey };
+  }
+
+  function getApiKey()      { return getLoginState().apiKey; }
+  function getBaseUrl()     { return getLoginState().baseUrl; }
+  function getModel()       { return getLoginState().model; }
+  function getProviderId()  { return getLoginState().provider; }
+
+  function apiHeaders() {
+    const headers = { 'Content-Type': 'application/json' };
+    const state = getLoginState();
+    if (state.apiKey) {
+      headers['X-API-Key'] = state.apiKey;
+      headers['X-API-Base-URL'] = state.baseUrl;
+      headers['X-API-Model'] = state.model;
+    }
+    return headers;
+  }
+
+  function updateLoginUI() {
+    const state = getLoginState();
+    const btn = document.getElementById('tnLoginBtn');
+    if (!btn) return;
+    if (state.isLoggedIn) {
+      const p = PROVIDERS[state.provider] || PROVIDERS.deepseek;
+      btn.textContent = p.name + ' · 已登录';
+      btn.classList.add('logged-in');
+      sbPoweredBy.textContent = 'Powered by ' + p.name;
+    } else {
+      btn.textContent = '登录';
+      btn.classList.remove('logged-in');
+      sbPoweredBy.textContent = 'Powered by DeepSeek';
+    }
+  }
 
   let allSkills = [];           // cached skill list from API
   let prevSkillValue = null;   // restore after manage panel closes
@@ -2341,6 +2611,139 @@
       heroSkillDropdown.dataset.lastSkill = val;
     }
   });
+
+  // ── Login modal ──
+  const loginOverlay = $('loginOverlay');
+  const loginProviders = $('loginProviders');
+  const loginModelSelect = $('loginModelSelect');
+  const loginModelInput = $('loginModelInput');
+  const loginBaseUrlField = $('loginBaseUrlField');
+  const loginBaseUrlInput = $('loginBaseUrlInput');
+  const loginApiKeyInput = $('loginApiKeyInput');
+  const loginSaveBtn = $('loginSaveBtn');
+  const loginCancelBtn = $('loginCancelBtn');
+  const loginLogoutBtn = $('loginLogoutBtn');
+  const tnLoginBtn = $('tnLoginBtn');
+
+  let loginSelectedProvider = 'deepseek';
+
+  function openLoginModal() {
+    const state = getLoginState();
+    loginSelectedProvider = state.provider || 'deepseek';
+    loginApiKeyInput.value = state.apiKey || '';
+
+    // Highlight the right provider card
+    loginProviders.querySelectorAll('.login-prov-card').forEach(c => {
+      c.classList.toggle('selected', c.dataset.provider === loginSelectedProvider);
+    });
+    updateLoginFormForProvider();
+    loginOverlay.classList.add('visible');
+  }
+
+  function closeLoginModal() {
+    loginOverlay.classList.remove('visible');
+  }
+
+  function updateLoginFormForProvider() {
+    const p = PROVIDERS[loginSelectedProvider] || PROVIDERS.deepseek;
+    const savedModel = storageGet('model') || p.defaultModel;
+
+    if (loginSelectedProvider === 'custom') {
+      // Show text input for free-form model name
+      loginModelSelect.style.display = 'none';
+      loginModelInput.style.display = 'block';
+      loginModelInput.value = savedModel || '';
+      // Show base URL field
+      loginBaseUrlField.style.display = 'block';
+      loginBaseUrlInput.value = storageGet('base_url') || '';
+    } else {
+      // Show dropdown with preset models
+      loginModelSelect.style.display = 'block';
+      loginModelInput.style.display = 'none';
+      loginModelSelect.innerHTML = '';
+      p.models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m; opt.textContent = m;
+        loginModelSelect.appendChild(opt);
+      });
+      if ([...loginModelSelect.options].some(o => o.value === savedModel)) {
+        loginModelSelect.value = savedModel;
+      }
+      // Hide base URL
+      loginBaseUrlField.style.display = 'none';
+    }
+
+    // Logout button visibility
+    loginLogoutBtn.style.display = getLoginState().apiKey ? 'inline-block' : 'none';
+  }
+
+  // Provider card clicks
+  loginProviders.addEventListener('click', (e) => {
+    const card = e.target.closest('.login-prov-card');
+    if (!card) return;
+    loginSelectedProvider = card.dataset.provider;
+    loginProviders.querySelectorAll('.login-prov-card').forEach(c => {
+      c.classList.toggle('selected', c.dataset.provider === loginSelectedProvider);
+    });
+    updateLoginFormForProvider();
+  });
+
+  // Save
+  loginSaveBtn.addEventListener('click', () => {
+    const key = loginApiKeyInput.value.trim();
+    if (!key) { showToast('请输入 API Key'); return; }
+    if (!key.startsWith('sk-') && loginSelectedProvider !== 'custom') {
+      showToast('API Key 格式不正确，应该以 sk- 开头');
+      return;
+    }
+
+    const p = PROVIDERS[loginSelectedProvider] || PROVIDERS.deepseek;
+    const modelVal = loginSelectedProvider === 'custom'
+      ? loginModelInput.value.trim()
+      : loginModelSelect.value;
+    const baseUrlVal = loginSelectedProvider === 'custom'
+      ? loginBaseUrlInput.value.trim()
+      : p.baseUrl;
+
+    if (!modelVal) { showToast('请选择或输入模型名称'); return; }
+    if (loginSelectedProvider === 'custom' && !baseUrlVal) {
+      showToast('请输入 Base URL'); return;
+    }
+
+    storageSet('provider', loginSelectedProvider);
+    storageSet('api_key', key);
+    storageSet('model', modelVal);
+    storageSet('base_url', baseUrlVal);
+
+    updateLoginUI();
+    closeLoginModal();
+    showToast('已登录 ' + p.name + ' ✓');
+  });
+
+  // Cancel / click outside
+  loginCancelBtn.addEventListener('click', closeLoginModal);
+  loginOverlay.addEventListener('click', (e) => {
+    if (e.target === loginOverlay) closeLoginModal();
+  });
+
+  // Logout
+  loginLogoutBtn.addEventListener('click', () => {
+    storageDel('provider');
+    storageDel('api_key');
+    storageDel('model');
+    storageDel('base_url');
+    loginApiKeyInput.value = '';
+    updateLoginUI();
+    updateLoginFormForProvider();
+    closeLoginModal();
+    showToast('已退出登录');
+  });
+
+  // Open login modal from top nav button
+  tnLoginBtn.addEventListener('click', openLoginModal);
+
+  // Initialize login UI on load
+  updateLoginUI();
 
   backToScenario.addEventListener('click', () => {
     restart();
@@ -2511,7 +2914,9 @@
     if (!sessionId) return;
     try {
       showLoading('正在恢复会话…');
-      const resp = await fetch(`/api/sessions/${sessionId}`);
+      const resp = await fetch(`/api/sessions/${sessionId}`,
+        { headers: apiHeaders() }
+      );
       if (!resp.ok) {
         clearSession();
         hideLoading();
@@ -2948,7 +3353,7 @@
     try {
       const resp = await fetch('/api/sessions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders(),
         body: JSON.stringify({ idea, scenario: selectedScenario, custom_rules: customRules, skill_key: skillKey })
       });
       if (!resp.ok) {
@@ -3117,7 +3522,7 @@
     try {
       const resp = await fetch(`/api/sessions/${sessionId}/feedback`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders(),
         body: JSON.stringify(feedback)
       });
       if (!resp.ok) {
@@ -3155,7 +3560,7 @@
       if (stateData.phase === 'selection') {
         const resp = await fetch(`/api/sessions/${sessionId}/feedback`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: apiHeaders(),
           body: JSON.stringify({
             selected_candidate: selectedCandidate,
             sentences: [],
@@ -3170,7 +3575,8 @@
 
       // Finalize
       const finalResp = await fetch(`/api/sessions/${sessionId}/finalize`, {
-        method: 'POST'
+        method: 'POST',
+        headers: apiHeaders()
       });
       if (!finalResp.ok) throw new Error('定稿失败');
       const data = await finalResp.json();
@@ -3194,7 +3600,8 @@
     showLoading('正在生成最终版本…');
     try {
       const resp = await fetch(`/api/sessions/${sessionId}/finalize`, {
-        method: 'POST'
+        method: 'POST',
+        headers: apiHeaders()
       });
       if (!resp.ok) throw new Error('定稿失败');
       const json = await resp.json();

@@ -4,19 +4,38 @@ import re
 from openai import OpenAI
 from prompts.system_prompt import build_round1_prompt, build_roundn_prompt
 
-_client = None
-MODEL = "deepseek-chat"
-BASE_URL = "https://api.deepseek.com"
+# Sensible defaults — used when the frontend doesn't send provider info
+# (local dev with .env) or as fallbacks.
+_DEFAULT_BASE_URL = "https://api.deepseek.com"
+_DEFAULT_MODEL = "deepseek-chat"
+
+# Cache OpenAI clients by (base_url, api_key) so the same user+provider
+# reuses the connection pool.  Each user brings their own key + provider.
+_clients: dict[tuple[str, str], OpenAI] = {}
 
 
-def _get_client() -> OpenAI:
-    global _client
-    if _client is None:
-        api_key = os.getenv("DEEPSEEK_API_KEY")
-        if not api_key:
-            raise RuntimeError("DEEPSEEK_API_KEY environment variable not set")
-        _client = OpenAI(api_key=api_key, base_url=BASE_URL, timeout=300.0)
-    return _client
+def _get_client(
+    api_key: str | None = None,
+    base_url: str | None = None,
+) -> OpenAI:
+    """Return an OpenAI client for the given provider credentials.
+
+    Falls back to the ``DEEPSEEK_API_KEY`` environment variable (local dev).
+    Caches clients per (base_url, api_key) tuple.
+    """
+    key: str | None = api_key or os.getenv("DEEPSEEK_API_KEY")
+    base: str = base_url or os.getenv("OPENAI_BASE_URL") or _DEFAULT_BASE_URL
+
+    if not key:
+        raise RuntimeError(
+            "未设置 API Key。请点击顶部导航栏的「登录」按钮，"
+            "选择你的大模型供应商并填入 API Key。"
+        )
+
+    cache_key = (base, key)
+    if cache_key not in _clients:
+        _clients[cache_key] = OpenAI(api_key=key, base_url=base, timeout=300.0)
+    return _clients[cache_key]
 
 
 def _extract_json(text: str) -> dict | list:
@@ -43,12 +62,20 @@ def _extract_json(text: str) -> dict | list:
 SCENARIO_LABELS = {"vibecoding": "Vibe Coding", "ppt": "PPT 制作"}
 
 
-def generate_candidates(idea: str, scenario: str, custom_rules: str | None = None, skill_key: str | None = None) -> list[dict]:
-    """Generate 3 candidate prompts from a vague idea."""
-    client = _get_client()
+def generate_candidates(
+    idea: str,
+    scenario: str,
+    custom_rules: str | None = None,
+    skill_key: str | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model: str | None = None,
+) -> list[dict]:
+    """Generate 1–3 candidate prompts from a vague idea."""
+    client = _get_client(api_key, base_url)
     label = SCENARIO_LABELS[scenario]
     resp = client.chat.completions.create(
-        model=MODEL,
+        model=model or _DEFAULT_MODEL,
         max_tokens=6144,
         messages=[
             {"role": "system", "content": build_round1_prompt(scenario, custom_rules, skill_key)},
@@ -185,9 +212,12 @@ def refine_prompt(
     blueprint: str | None = None,
     tasks: list[dict] | None = None,
     sentences: list[dict] | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model: str | None = None,
 ) -> dict:
     """Refine based on sentence-level feedback. Returns dict with 'prompt' (PPT) or 'blueprint'+'tasks' (vibecoding)."""
-    client = _get_client()
+    client = _get_client(api_key, base_url)
     feedback_text = _build_feedback_text(approved, rejected, unmarked, comment, sentences)
 
     if scenario == "vibecoding" and blueprint and tasks:
@@ -223,7 +253,7 @@ def refine_prompt(
 请生成精炼后的提示词。"""
 
     resp = client.chat.completions.create(
-        model=MODEL,
+        model=model or _DEFAULT_MODEL,
         max_tokens=6144,
         messages=[
             {"role": "system", "content": build_roundn_prompt(scenario)},

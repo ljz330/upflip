@@ -15,9 +15,20 @@ def check_convergence(session: SessionState) -> bool:
     return rejected_count <= 1 and (not comment or len(comment.strip()) < 20)
 
 
-def start_session(idea: str, scenario: str, custom_rules: str | None = None, skill_key: str | None = None) -> SessionState:
+def start_session(
+    idea: str,
+    scenario: str,
+    custom_rules: str | None = None,
+    skill_key: str | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model: str | None = None,
+) -> SessionState:
     session = store.create(idea, scenario, custom_rules, skill_key)
-    candidates = generate_candidates(idea, scenario, custom_rules, skill_key)
+    candidates = generate_candidates(
+        idea, scenario, custom_rules, skill_key,
+        api_key=api_key, base_url=base_url, model=model,
+    )
     session.candidates = candidates
     store.update(session)
     return session
@@ -27,7 +38,10 @@ def process_feedback(
     session: SessionState,
     selected_candidate: int | None,
     sentences: list[dict],
-    comment: str | None
+    comment: str | None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model: str | None = None,
 ) -> SessionState:
     # On first feedback (round 1 → round 2), record chosen angle and content
     was_selection = (session.round == 1 and session.phase == "selection")
@@ -82,6 +96,9 @@ def process_feedback(
         blueprint=session.blueprint,
         tasks=session.tasks,
         sentences=sentences,
+        api_key=api_key,
+        base_url=base_url,
+        model=model,
     )
 
     if session.scenario == "vibecoding":

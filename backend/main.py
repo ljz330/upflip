@@ -6,7 +6,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-load_dotenv()
+# Only load .env in local development — on Vercel, env vars are set via dashboard.
+if not os.getenv("VERCEL"):
+    load_dotenv()
 
 app = FastAPI(title="UPFLIP")
 

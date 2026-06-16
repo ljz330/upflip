@@ -17,12 +17,29 @@ otherwise the filename stem is used as the display name.
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
-SKILLS_DIR = Path(__file__).resolve().parent.parent / "prompts" / "skills"
-BUILTIN_DIR = SKILLS_DIR / "builtin"
-CUSTOM_DIR = SKILLS_DIR / "custom"
+# On Vercel the filesystem outside /tmp is read-only.  Builtin skills are
+# shipped with the code (bundled into the deployment), but custom skills
+# go to /tmp so they persist across warm starts of the same instance.
+# They will be lost on cold start — a documented limitation.
+if os.getenv("VERCEL"):
+    SKILLS_DIR = Path("/tmp/skills")
+    BUILTIN_DIR = SKILLS_DIR / "builtin"
+    CUSTOM_DIR = SKILLS_DIR / "custom"
+    # Copy builtin skills into /tmp so they're readable
+    _src_builtin = Path(__file__).resolve().parent.parent / "prompts" / "skills" / "builtin"
+    BUILTIN_DIR.mkdir(parents=True, exist_ok=True)
+    for _f in _src_builtin.glob("*.txt"):
+        _dest = BUILTIN_DIR / _f.name
+        if not _dest.exists():
+            _dest.write_text(_f.read_text(encoding="utf-8"), encoding="utf-8")
+else:
+    SKILLS_DIR = Path(__file__).resolve().parent.parent / "prompts" / "skills"
+    BUILTIN_DIR = SKILLS_DIR / "builtin"
+    CUSTOM_DIR = SKILLS_DIR / "custom"
 
 BUILTIN_NAMES: dict[str, str] = {
     "clean_code": "默认 Clean Code 规范",
