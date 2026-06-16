@@ -1,0 +1,10 @@
+- Define API contracts first: share request/response types between frontend and backend (tRPC, OpenAPI-generated types, or a shared types package).
+- End-to-end type safety: the frontend should never receive data whose shape it doesn't know at compile time.
+- Database: prefer migration-based schema management (Prisma, Drizzle). All database access goes through a data access layer, never raw queries in route handlers.
+- API design: RESTful conventions with consistent error schema (`{ error: { code, message, details? } }`). Use proper HTTP status codes.
+- Authentication: JWT stored in httpOnly cookies (not localStorage). CSRF protection. Clear separation of public vs. protected routes.
+- Validation: validate at the boundary — API inputs with zod/yup, database constraints as the final guard. Never trust client data.
+- Environment: use typed environment variables (never `process.env` directly without validation). Separate configs for dev/test/prod.
+- Testing: API tests against a test database, E2E tests for critical user flows. Mock external services, not internal modules.
+- CI/CD: lint → type-check → test → build must all pass before merge. Feature flags for gradual rollout.
+- Monorepo best practices: shared configs (tsconfig, eslint, prettier) at root. Each package has clear boundaries and minimal dependencies.

@@ -1,3 +1,0 @@
-{
-  "buildCommand": "python -c \"import shutil; shutil.copytree('backend', 'cloud-functions/api/backend', dirs_exist_ok=True)\""
-}
