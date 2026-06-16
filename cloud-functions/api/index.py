@@ -18,9 +18,11 @@ os.environ["API_PREFIX"] = ""
 os.environ["EDGEONE"] = "1"
 
 # Ensure backend imports resolve.
-# On EdgeOne, cloud-functions/api/ is deployed as /var/user/api/ — only ONE
-# level up from the repo root, not two (the cloud-functions prefix is stripped).
-_backend_dir = os.path.join(os.path.dirname(__file__), "..", "backend")
+# EdgeOne only deploys cloud-functions/ content to the runtime — project
+# root directories like backend/ are NOT available. The build command in
+# edgeone.json copies backend/ → cloud-functions/api/backend/ before deploy,
+# so it ends up alongside this file at /var/user/api/backend/.
+_backend_dir = os.path.join(os.path.dirname(__file__), "backend")
 sys.path.insert(0, _backend_dir)
 
 from fastapi import FastAPI
