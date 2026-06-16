@@ -2,10 +2,11 @@
 
 EdgeOne Pages uses file-system routing: ``cloud-functions/api/index.py`` is
 mapped to the ``/api`` URL prefix.  The prefix is stripped before the request
-reaches FastAPI, so routes should be registered *without* the ``/api`` prefix.
+reaches FastAPI, so routes are registered *without* the ``/api`` prefix.
 
-This thin wrapper sets ``API_PREFIX=""``, adds the backend directory to
-``sys.path``, and re-exports the FastAPI app from ``backend.main``.
+IMPORTANT: EdgeOne detects Python entry points by scanning for the literal
+pattern ``app = FastAPI(...)`` in the file.  The app must be instantiated
+inline here — merely importing it from ``backend.main`` won't work.
 """
 
 import os
@@ -16,8 +17,29 @@ os.environ["API_PREFIX"] = ""
 os.environ["EDGEONE"] = "1"
 
 # Ensure backend imports resolve.
-backend_dir = os.path.join(os.path.dirname(__file__), "..", "..", "backend")
-sys.path.insert(0, backend_dir)
+_backend_dir = os.path.join(os.path.dirname(__file__), "..", "..", "backend")
+sys.path.insert(0, _backend_dir)
 
-# Re-export the FastAPI application.
-from main import app  # noqa: E402
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+# ── Instantiate FastAPI INLINE (required for EdgeOne detection) ──────
+app = FastAPI(title="UPFLIP")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Import and mount the optimizer router (no /api prefix — EdgeOne strips it).
+from routes.optimize import router as optimize_router  # noqa: E402
+
+app.include_router(optimize_router, prefix="")
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
