@@ -25,7 +25,7 @@ from pathlib import Path
 # shipped with the code (bundled into the deployment), but custom skills
 # go to /tmp so they persist across warm starts of the same instance.
 # They will be lost on cold start — a documented limitation.
-if os.getenv("VERCEL") or os.getenv("EDGEONE"):
+if os.getenv("VERCEL"):
     SKILLS_DIR = Path("/tmp/skills")
     BUILTIN_DIR = SKILLS_DIR / "builtin"
     CUSTOM_DIR = SKILLS_DIR / "custom"

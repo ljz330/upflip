@@ -1,9 +1,0 @@
-- Use functional components with hooks exclusively. No class components.
-- Prefer composition over inheritance: extract reusable logic into custom hooks, not HOCs or mixins.
-- Each component should have a single responsibility. Split large components into smaller, focused ones.
-- State management: use useState/useReducer for local state, React Context for shared UI state, and a dedicated library (Zustand, Jotai) only for complex global state.
-- Memoization: use React.memo for pure presentational components, useMemo for expensive computations, useCallback for stable callback references passed to optimized children.
-- Data fetching: use a consistent pattern (React Query / SWR) with loading, error, empty, and success states handled explicitly.
-- Side effects: useEffect should have a clear cleanup function. Avoid cascading effects — prefer event-driven updates.
-- Accessibility: use semantic HTML, aria attributes where needed, and ensure keyboard navigability.
-- Performance: lazy-load routes with React.lazy + Suspense, avoid unnecessary re-renders, use the React DevTools profiler.
