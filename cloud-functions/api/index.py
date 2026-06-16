@@ -18,7 +18,9 @@ os.environ["API_PREFIX"] = ""
 os.environ["EDGEONE"] = "1"
 
 # Ensure backend imports resolve.
-_backend_dir = os.path.join(os.path.dirname(__file__), "..", "..", "backend")
+# On EdgeOne, cloud-functions/api/ is deployed as /var/user/api/ — only ONE
+# level up from the repo root, not two (the cloud-functions prefix is stripped).
+_backend_dir = os.path.join(os.path.dirname(__file__), "..", "backend")
 sys.path.insert(0, _backend_dir)
 
 from fastapi import FastAPI
