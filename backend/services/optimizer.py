@@ -15,9 +15,9 @@ def check_convergence(session: SessionState) -> bool:
     return rejected_count <= 1 and (not comment or len(comment.strip()) < 20)
 
 
-def start_session(idea: str, scenario: str, custom_rules: str | None = None) -> SessionState:
-    session = store.create(idea, scenario, custom_rules)
-    candidates = generate_candidates(idea, scenario, custom_rules)
+def start_session(idea: str, scenario: str, custom_rules: str | None = None, skill_key: str | None = None) -> SessionState:
+    session = store.create(idea, scenario, custom_rules, skill_key)
+    candidates = generate_candidates(idea, scenario, custom_rules, skill_key)
     session.candidates = candidates
     store.update(session)
     return session

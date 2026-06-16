@@ -257,11 +257,26 @@ DEFAULT_QUALITY_SECTION = """- Embed SOLID principles naturally: single-responsi
 
 # ── Public builder functions ──────────────────────────────────────
 
-def build_round1_prompt(scenario: str, custom_rules: str | None = None) -> str:
-    """Build the Round 1 system prompt for a given scenario."""
+def build_round1_prompt(scenario: str, custom_rules: str | None = None, skill_key: str | None = None) -> str:
+    """Build the Round 1 system prompt for a given scenario.
+
+    Resolution order for the ``{quality_section}`` placeholder (vibecoding only):
+    1. *skill_key* — load the content of a named skill file.
+    2. *custom_rules* — inline custom text (backward-compatible + ad-hoc custom).
+    3. ``DEFAULT_QUALITY_SECTION`` — built-in fallback.
+    """
     if scenario == "vibecoding":
         skill = VIBECODING_SKILL
-        quality = custom_rules.strip() if custom_rules and custom_rules.strip() else DEFAULT_QUALITY_SECTION
+        quality = DEFAULT_QUALITY_SECTION  # fallback
+
+        if skill_key:
+            from services.skill_loader import get_skill_content
+            loaded = get_skill_content(skill_key)
+            if loaded:
+                quality = loaded
+        elif custom_rules and custom_rules.strip():
+            quality = custom_rules.strip()
+
         skill = skill.replace("{quality_section}", quality)
         return _ROUND1_VIBECODING.format(skill_model=skill)
     else:

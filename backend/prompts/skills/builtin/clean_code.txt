@@ -1,0 +1,5 @@
+- Embed SOLID principles naturally: single-responsibility components, interface-driven design, dependency injection where appropriate.
+- DRY without over-abstracting: prefer clarity over premature deduplication.
+- Require static type safety (TypeScript strict mode, Zod, Pydantic, Rust-style enums).
+- Error handling must be explicit: define error boundaries at architectural seams, distinguish recoverable vs. fatal errors, provide fallback UI and retry logic.
+- Key paths must include observability: structured logging, meaningful error messages, performance markers.

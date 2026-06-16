@@ -5,16 +5,61 @@ from models.schemas import (
     FinalizeResponse,
     SessionOut,
 )
+from pydantic import BaseModel, Field
 from services.optimizer import start_session, process_feedback
+from services.skill_loader import (
+    load_all_skills,
+    save_custom_skill,
+    delete_custom_skill,
+    count_custom_skills,
+)
 from store import store
 
 router = APIRouter()
 
 
+class CreateSkillRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=50)
+    content: str = Field(..., min_length=10, max_length=3000)
+
+
+@router.get("/skills")
+async def list_skills():
+    skills = load_all_skills()
+    # Return without full content for list view (preview only)
+    return {
+        "skills": [
+            {
+                "id": s["id"],
+                "name": s["name"],
+                "preview": s["preview"],
+                "is_custom": s["is_custom"],
+            }
+            for s in skills
+        ]
+    }
+
+
+@router.post("/skills", status_code=201)
+async def create_skill(req: CreateSkillRequest):
+    try:
+        skill = save_custom_skill(req.name, req.content)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return skill
+
+
+@router.delete("/skills/{skill_id}", status_code=204)
+async def remove_skill(skill_id: str):
+    ok = delete_custom_skill(skill_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="技能不存在或不可删除")
+
+
 @router.post("/sessions", status_code=201, response_model=SessionOut)
 async def create_session(req: CreateSessionRequest):
     try:
-        session = start_session(req.idea, req.scenario, req.custom_rules)
+        session = start_session(req.idea, req.scenario, req.custom_rules, req.skill_key)
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:

@@ -29,6 +29,7 @@ class SessionOut(BaseModel):
     chosen_angle: Optional[str] = None
     scenario: Optional[str] = None
     custom_rules: Optional[str] = None
+    skill_key: Optional[str] = None
     blueprint: Optional[str] = None
     summary: Optional[str] = None
     tasks: Optional[list[TaskItem]] = None
@@ -39,6 +40,7 @@ class CreateSessionRequest(BaseModel):
     idea: str = Field(..., min_length=1, max_length=5000)
     scenario: str = Field(..., pattern="^(vibecoding|ppt)$")
     custom_rules: Optional[str] = None
+    skill_key: Optional[str] = None
 
 
 class SentenceFeedback(BaseModel):

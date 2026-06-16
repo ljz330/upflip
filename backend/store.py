@@ -5,11 +5,12 @@ from models.schemas import CandidateOut, SessionOut
 
 
 class SessionState:
-    def __init__(self, session_id: str, original_idea: str, scenario: str, custom_rules: str | None = None):
+    def __init__(self, session_id: str, original_idea: str, scenario: str, custom_rules: str | None = None, skill_key: str | None = None):
         self.session_id = session_id
         self.original_idea = original_idea
         self.scenario = scenario
         self.custom_rules = custom_rules
+        self.skill_key = skill_key
         self.blueprint: Optional[str] = None
         self.summary: Optional[str] = None
         self.tasks: Optional[list[dict]] = None
@@ -36,6 +37,7 @@ class SessionState:
             prompt=self.current_prompt,
             scenario=self.scenario,
             custom_rules=self.custom_rules,
+            skill_key=self.skill_key,
             blueprint=self.blueprint,
             summary=self.summary,
             tasks=self.tasks,
@@ -48,9 +50,9 @@ class SessionStore:
     def __init__(self):
         self._sessions: dict[str, SessionState] = {}
 
-    def create(self, original_idea: str, scenario: str, custom_rules: str | None = None) -> SessionState:
+    def create(self, original_idea: str, scenario: str, custom_rules: str | None = None, skill_key: str | None = None) -> SessionState:
         sid = str(uuid.uuid4())[:8]
-        session = SessionState(sid, original_idea, scenario, custom_rules)
+        session = SessionState(sid, original_idea, scenario, custom_rules, skill_key)
         self._sessions[sid] = session
         return session
 

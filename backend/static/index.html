@@ -19,11 +19,11 @@
     --reject-bg: #fef2f2;
     --hover: #f5f5f4;
     --radius: 8px;
-    --c1: #2563eb;
-    --c1-bg: #eff6ff;
-    --c2: #0d9488;
-    --c2-bg: #f0fdfa;
-    --c3: #d97706;
+    --c1: #F5A623;
+    --c1-bg: #fff8f0;
+    --c2: #E8734A;
+    --c2-bg: #fff5f0;
+    --c3: #D97706;
     --c3-bg: #fffbeb;
   }
 
@@ -36,8 +36,6 @@
     line-height: 1.6;
     min-height: 100vh;
   }
-  body.has-video-bg { background: #0a0a0f; }
-
   /* ── Toast ── */
   .header {
     display: flex;
@@ -82,7 +80,7 @@
   }
   .status-dot.empty { background: #d6d3d1; }
   .status-dot.loaded { background: #16a34a; }
-  .status-dot.done { background: #0d9488; }
+  .status-dot.done { background: #F5A623; }
 
   /* Load area */
   .load-area {
@@ -96,8 +94,8 @@
     cursor: pointer;
   }
   .load-area.drag-over {
-    border-color: #0d9488;
-    background: #f0fdfa;
+    border-color: #F5A623;
+    background: #fff8f0;
   }
   .load-area.has-file {
     border-style: solid;
@@ -192,18 +190,6 @@
     box-shadow: 0 0 8px 8px hsla(248,22%,89%,0.95);
   }
   .wm-cover-br::before { background: linear-gradient(135deg, hsl(248,22%,90%) 0%, hsl(248,22%,87%) 100%); }
-
-  /* App background video */
-  .app-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-  }
-  .app-bg video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 
   /* ── Top navigation card ── */
   .top-nav-wrapper {
@@ -665,7 +651,7 @@
 
   /* ── App container ── */
   .app-container {
-    max-width: 720px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 40px 24px;
     display: none;
@@ -676,7 +662,7 @@
   }
   .app-container.visible { display: block; }
   .app-container.hero-mode {
-    background: transparent;
+    background: #ffffff;
     max-width: none;
     margin: 0;
     min-height: 100vh;
@@ -733,9 +719,8 @@
     font-size: 80px;
     letter-spacing: -4.8px;
     line-height: 1;
-    color: #ffffff;
+    color: #F5A623;
     margin: 0;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
   }
 
   .hero-subtitle {
@@ -743,7 +728,7 @@
     font-weight: 500;
     font-size: 20px;
     letter-spacing: -0.4px;
-    color: rgba(255,255,255,0.8);
+    color: #78716c;
     max-width: 736px;
     margin: 0;
     line-height: 1.5;
@@ -753,21 +738,19 @@
   /* Search Box — frosted glass background layer */
   .search-box {
     width: 100%;
-    max-width: 728px;
-    background: rgba(0,0,0,0.20);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    max-width: 880px;
+    background: #ffffff;
     border-radius: 22px;
-    border: 0.5px solid rgba(255,255,255,0.15);
+    border: 1px solid #e7e5e4;
     padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
     overflow: visible;
   }
 
-  /* Header row inside glass */
+  /* Header row */
   .sb-top {
     display: flex;
     align-items: center;
@@ -775,27 +758,27 @@
     font-family: 'Schibsted Grotesk', sans-serif;
     font-weight: 500;
     font-size: 12px;
-    color: rgba(255,255,255,0.8);
+    color: #78716c;
     padding: 4px 8px 0;
   }
 
   .sb-skill-label {
     padding: 3px 10px;
-    background: rgba(255,255,255,0.12);
+    background: #f5f5f4;
     border-radius: 6px;
     font-family: 'Schibsted Grotesk', sans-serif;
     font-weight: 500;
     font-size: 12px;
-    color: rgba(255,255,255,0.9);
+    color: #292524;
   }
 
   .sb-ai-badge {
     display: flex;
     align-items: center;
     gap: 5px;
-    color: rgba(255,255,255,0.55);
+    color: #a8a29e;
   }
-  .sb-ai-badge svg { color: rgba(255,255,255,0.4); }
+  .sb-ai-badge svg { color: #a8a29e; }
 
   /* White card floating on top of glass */
   .sb-body {
@@ -921,6 +904,144 @@
     color: #292524;
   }
 
+  /* Inline custom rules (appears when "自定义规范（仅本次）" selected) */
+  .sb-custom-inline {
+    margin-top: 8px;
+  }
+  .sb-custom-inline textarea {
+    width: 100%;
+    border: 1px solid rgba(0,0,0,0.10);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
+    min-height: 60px;
+    outline: none;
+    background: #ffffff;
+    color: #292524;
+    transition: border-color 0.15s;
+  }
+  .sb-custom-inline textarea:focus {
+    border-color: #F5A623;
+  }
+
+  /* Skill management panel (appears when "管理自定义 Skill" selected) */
+  .skill-manage-panel {
+    margin-top: 8px;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.06);
+    max-width: 340px;
+  }
+  .skm-header {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1B1722;
+    margin-bottom: 10px;
+  }
+  .skm-list {
+    margin-bottom: 12px;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+  .skm-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #292524;
+  }
+  .skm-list-item:hover {
+    background: #f5f5f4;
+  }
+  .skm-list-item-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .skm-list-item-del {
+    background: none;
+    border: none;
+    color: #dc2626;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 4px;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+  }
+  .skm-list-item-del:hover {
+    opacity: 1;
+  }
+  .skm-list-empty {
+    font-size: 12px;
+    color: #a8a29e;
+    text-align: center;
+    padding: 12px 0;
+  }
+  .skm-form input,
+  .skm-form textarea {
+    width: 100%;
+    border: 1px solid rgba(0,0,0,0.10);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    margin-bottom: 8px;
+    background: #fafaf9;
+    color: #292524;
+    transition: border-color 0.15s;
+  }
+  .skm-form input:focus,
+  .skm-form textarea:focus {
+    border-color: #F5A623;
+  }
+  .skm-form textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+  .skm-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .skm-btn {
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.10);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .skm-btn-save {
+    background: #F5A623;
+    color: #fff;
+    border-color: #F5A623;
+  }
+  .skm-btn-save:hover {
+    background: #D4951E;
+  }
+  .skm-btn-cancel {
+    background: #fff;
+    color: #44403c;
+  }
+  .skm-btn-cancel:hover {
+    background: #f5f5f4;
+  }
+  .skm-error {
+    font-size: 11px;
+    color: #dc2626;
+    margin-top: 6px;
+    display: none;
+  }
+
   .hero-back-link {
     background: none;
     border: none;
@@ -974,11 +1095,11 @@
     font-weight: 500;
     padding: 3px 10px;
     border-radius: 14px;
-    background: #f0fdfa;
-    color: #0f766e;
-    border: 1px solid #ccfbf1;
+    background: #fff8f0;
+    color: #B87A1E;
+    border: 1px solid #fef3c7;
   }
-  .scenario-pill.vibecoding { background: #eff6ff; color: #1d4ed8; border-color: #dbeafe; }
+  .scenario-pill.vibecoding { background: #fff8f0; color: #B87A1E; border-color: #fef3c7; }
   .scenario-pill.ppt { background: #fffbeb; color: #b45309; border-color: #fef3c7; }
 
   /* Back link */
@@ -998,8 +1119,7 @@
   .selection-view.visible { display: block; }
 
   .selection-header {
-    margin-bottom: 24px;
-    text-align: center;
+    display: none;
   }
   .selection-header h2 {
     font-size: 1.1rem;
@@ -1031,16 +1151,15 @@
     transition: all 0.15s;
     position: relative;
     border-left: 4px solid transparent;
-    flex: 1 1 300px;
+    flex: 1 1 0;
     min-width: 260px;
-    max-width: 400px;
   }
   .candidate-card:hover {
     box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   }
   .candidate-card.selected {
-    border-color: #0d9488;
-    box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+    border-color: #F5A623;
+    box-shadow: 0 0 0 3px rgba(245,166,35,0.15);
   }
   .candidate-card.card-1 { border-left-color: var(--c1); }
   .candidate-card.card-2 { border-left-color: var(--c2); }
@@ -1105,21 +1224,21 @@
     font-family: inherit;
   }
   .card-select-btn:hover {
-    background: #0d9488;
+    background: #F5A623;
     color: white;
-    border-color: #0d9488;
+    border-color: #F5A623;
   }
   .candidate-card.selected .card-select-btn {
-    background: #0d9488;
+    background: #F5A623;
     color: white;
-    border-color: #0d9488;
+    border-color: #F5A623;
   }
 
   .card-task-count {
     display: inline-block;
     font-size: 0.76rem;
-    color: #0f766e;
-    background: #f0fdfa;
+    color: #B87A1E;
+    background: #fff8f0;
     padding: 2px 10px;
     border-radius: 12px;
     margin-top: 8px;
@@ -1406,7 +1525,7 @@
     transition: border-color 0.15s;
   }
   .comment-section textarea:focus {
-    border-color: #0d9488;
+    border-color: #F5A623;
   }
 
   /* Actions */
@@ -1429,11 +1548,11 @@
   }
   .btn:hover { background: var(--hover); }
   .btn.primary {
-    background: #0d9488;
+    background: #F5A623;
     color: white;
-    border-color: #0d9488;
+    border-color: #F5A623;
   }
-  .btn.primary:hover { background: #0f766e; }
+  .btn.primary:hover { background: #D4951E; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   /* Legend */
@@ -1488,7 +1607,7 @@
     transition: border-color 0.15s;
   }
   .input-area textarea:focus {
-    border-color: #0d9488;
+    border-color: #F5A623;
   }
   .input-area .input-row {
     display: flex;
@@ -1542,7 +1661,7 @@
     outline: none;
     transition: border-color 0.15s;
   }
-  .custom-rules-body textarea:focus { border-color: #0d9488; }
+  .custom-rules-body textarea:focus { border-color: #F5A623; }
   .custom-rules-body .hint {
     font-size: 0.75rem;
     color: var(--muted);
@@ -1566,7 +1685,7 @@
     width: 36px;
     height: 36px;
     border: 3px solid var(--border);
-    border-top-color: #0d9488;
+    border-top-color: #F5A623;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
@@ -1579,8 +1698,8 @@
   /* Convergence bar */
   .convergence-bar {
     display: none;
-    background: #f0fdfa;
-    border: 1px solid #0d9488;
+    background: #fff8f0;
+    border: 1px solid #F5A623;
     border-radius: var(--radius);
     padding: 16px 20px;
     margin-bottom: 24px;
@@ -1591,7 +1710,7 @@
   .convergence-bar.visible { display: flex; }
   .convergence-bar .msg {
     font-size: 0.9rem;
-    color: #0f766e;
+    color: #B87A1E;
     flex: 1;
   }
 
@@ -1599,7 +1718,7 @@
   .final-output {
     display: none;
     background: white;
-    border: 1px solid #0d9488;
+    border: 1px solid #F5A623;
     border-radius: var(--radius);
     padding: 28px;
     margin-bottom: 24px;
@@ -1609,7 +1728,7 @@
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 12px;
-    color: #0f766e;
+    color: #B87A1E;
   }
   .final-output .final-prompt {
     font-size: 1rem;
@@ -1669,13 +1788,6 @@
   <!-- <div class="landing-overlay"></div> -->
   <div class="wm-cover wm-cover-tl"></div>
   <div class="wm-cover wm-cover-br"></div>
-</div>
-
-<!-- App background video -->
-<div class="app-bg" id="appBg" style="display:none">
-  <video autoplay muted loop playsinline>
-    <source src="/app_bg.mp4" type="video/mp4">
-  </video>
 </div>
 
 <div class="loading-overlay" id="loadingOverlay">
@@ -1832,13 +1944,23 @@
 
         <div class="sb-bottom">
           <div class="sb-actions" id="heroSkillSelect" style="display:none">
-            <select id="heroSkillDropdown">
-              <option value="default">默认 Clean Code 规范（SOLID/DRY/TDD）</option>
-              <option value="react">React 最佳实践</option>
-              <option value="typescript">TypeScript 严格模式</option>
-              <option value="fullstack">全栈项目规范</option>
-              <option value="custom">自定义规范…</option>
-            </select>
+            <select id="heroSkillDropdown"></select>
+            <div class="sb-custom-inline" id="heroCustomInline" style="display:none">
+              <textarea id="heroCustomInlineInput" placeholder="输入你的自定义代码规范…&#10;例如：&#10;• 所有公共函数必须有 JSDoc 注释&#10;• 优先使用 composition 而非 inheritance&#10;• 强制使用函数式编程风格" rows="3"></textarea>
+            </div>
+            <div class="skill-manage-panel" id="skillManagePanel" style="display:none">
+              <div class="skm-header">管理自定义 Skill</div>
+              <div class="skm-list" id="skillManageList"></div>
+              <div class="skm-form">
+                <input type="text" id="skmNameInput" placeholder="Skill 名称（如：我的严格规范）" maxlength="50" />
+                <textarea id="skmContentInput" placeholder="Skill 内容（至少 10 个字符）…" rows="4"></textarea>
+                <div class="skm-actions">
+                  <button class="skm-btn skm-btn-save" id="skmSaveBtn">保存</button>
+                  <button class="skm-btn skm-btn-cancel" id="skmCancelBtn">取消</button>
+                </div>
+                <div class="skm-error" id="skmError"></div>
+              </div>
+            </div>
           </div>
           <span class="sb-charcount" id="heroCharCount">0/3,000</span>
         </div>
@@ -1957,7 +2079,7 @@
   <!-- Actions -->
   <div class="actions" id="actions" style="display:none">
     <button class="btn primary" id="submitBtn">提交反馈</button>
-    <button class="btn" id="finalizeNowBtn" style="color:#0d9488;border-color:#0d9488">直接定稿</button>
+    <button class="btn" id="finalizeNowBtn" style="color:#F5A623;border-color:#F5A623">直接定稿</button>
     <button class="btn" id="resetBtn">重置所有标注</button>
   </div>
 </div>
@@ -2066,8 +2188,6 @@
   const toast = $('toast');
   const selectionView = $('selectionView');
   const candidatesList = $('candidatesList');
-  const selRound = $('selRound');
-  const selIdea = $('selIdea');
   const loadingOverlay = $('loadingOverlay');
   const loadingText = $('loadingText');
   const convergenceBar = $('convergenceBar');
@@ -2080,7 +2200,6 @@
   const restartFinalBtn = $('restartFinalBtn');
   const landingWrapper = $('landingWrapper');
   const appContainer = $('appContainer');
-  const appBg = $('appBg');
   const landingBg = document.querySelector('.landing-bg');
   const scenarioSelection = $('scenarioSelection');
   const scenarioVibecoding = $('scenarioVibecoding');
@@ -2099,8 +2218,20 @@
   const heroBadgeLabel = $('heroBadgeLabel');
   const heroSkillSelect = $('heroSkillSelect');
   const heroSkillDropdown = $('heroSkillDropdown');
+  const heroCustomInline = $('heroCustomInline');
+  const heroCustomInlineInput = $('heroCustomInlineInput');
+  const skillManagePanel = $('skillManagePanel');
+  const skillManageList = $('skillManageList');
+  const skmNameInput = $('skmNameInput');
+  const skmContentInput = $('skmContentInput');
+  const skmSaveBtn = $('skmSaveBtn');
+  const skmCancelBtn = $('skmCancelBtn');
+  const skmError = $('skmError');
   const sbSkillLabel = $('sbSkillLabel');
   const heroCharCount = $('heroCharCount');
+
+  let allSkills = [];           // cached skill list from API
+  let prevSkillValue = null;   // restore after manage panel closes
   const heroBackLink = $('heroBackLink');
   const blueprintBox = $('blueprintBox');
   const blueprintText = $('blueprintText');
@@ -2128,10 +2259,18 @@
     if (key === 'vibecoding') {
       heroIdeaInput.placeholder = '例如：帮我搭建一个带用户认证的博客系统、写一个高性能的 Redis 缓存层…';
       heroSubtitle.textContent = '输入你的模糊想法，AI 从 3 个角度生成项目蓝图与可执行任务';
-      sbSkillLabel.textContent = '默认 Clean Code 规范';
       heroSkillSelect.style.display = 'flex';
-      heroSkillDropdown.value = 'default';
       heroBadgeLabel.textContent = 'Vibe Coding';
+      // Hide sub-panels
+      heroCustomInline.style.display = 'none';
+      skillManagePanel.style.display = 'none';
+      // Load skills from API (async, dropdown updates when done)
+      loadSkills().then(() => {
+        if (allSkills.length > 0) {
+          heroSkillDropdown.value = allSkills[0].id;
+          sbSkillLabel.textContent = allSkills[0].name;
+        }
+      });
     } else {
       heroIdeaInput.placeholder = '例如：写一份 AI 行业投资分析报告、做一套新产品发布会演示…';
       heroSubtitle.textContent = '输入你的模糊想法，AI 生成精炼的演示提示词';
@@ -2141,12 +2280,9 @@
     }
     heroCharCount.textContent = '0/3,000';
 
-    // Switch background video to app bg
-    if (landingBg) landingBg.style.display = 'none';
-    if (appBg) appBg.style.display = 'block';
-
     // Switch views
     landingWrapper.classList.remove('visible');
+    landingBg.style.display = 'none';
     appContainer.classList.add('visible', 'hero-mode');
     heroInput.classList.add('visible');
     headerDiv.style.display = 'none';
@@ -2184,14 +2320,26 @@
 
   heroSkillDropdown.addEventListener('change', () => {
     const val = heroSkillDropdown.value;
-    const labels = {
-      default: '默认 Clean Code 规范',
-      react: 'React 最佳实践',
-      typescript: 'TypeScript 严格模式',
-      fullstack: '全栈项目规范',
-      custom: '自定义规范…'
-    };
-    sbSkillLabel.textContent = labels[val] || val;
+
+    // Hide all sub-panels by default
+    heroCustomInline.style.display = 'none';
+    skillManagePanel.style.display = 'none';
+
+    if (val === '__custom_inline__') {
+      sbSkillLabel.textContent = '自定义规范（仅本次）';
+      heroCustomInline.style.display = 'block';
+    } else if (val === '__manage__') {
+      sbSkillLabel.textContent = '管理自定义 Skill';
+      prevSkillValue = heroSkillDropdown.dataset.lastSkill || null;
+      heroSkillDropdown.dataset.lastSkill = prevSkillValue || '';
+      renderSkillManageList();
+      skillManagePanel.style.display = 'block';
+    } else {
+      // Find the skill name from cached data
+      const skill = allSkills.find(s => s.id === val);
+      sbSkillLabel.textContent = skill ? skill.name : val;
+      heroSkillDropdown.dataset.lastSkill = val;
+    }
   });
 
   backToScenario.addEventListener('click', () => {
@@ -2204,6 +2352,146 @@
     const expanded = customRulesBody.classList.toggle('expanded');
     customRulesToggle.classList.toggle('expanded', expanded);
   });
+
+  // ── Skill loading & management ──
+  async function loadSkills() {
+    try {
+      const resp = await fetch('/api/skills');
+      if (resp.ok) {
+        const data = await resp.json();
+        allSkills = data.skills || [];
+      }
+    } catch (e) {
+      // Keep empty — dropdown will show only special options
+      allSkills = [];
+    }
+    populateSkillDropdown();
+  }
+
+  function populateSkillDropdown() {
+    const prevVal = heroSkillDropdown.value;
+    heroSkillDropdown.innerHTML = '';
+
+    // Built-in + custom skills
+    allSkills.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.name + (s.is_custom ? ' ★' : '');
+      heroSkillDropdown.appendChild(opt);
+    });
+
+    // Special options at the bottom
+    const sep = document.createElement('option');
+    sep.disabled = true;
+    sep.textContent = '──────────';
+    heroSkillDropdown.appendChild(sep);
+
+    const customOpt = document.createElement('option');
+    customOpt.value = '__custom_inline__';
+    customOpt.textContent = '自定义规范（仅本次）…';
+    heroSkillDropdown.appendChild(customOpt);
+
+    const manageOpt = document.createElement('option');
+    manageOpt.value = '__manage__';
+    manageOpt.textContent = '管理自定义 Skill…';
+    heroSkillDropdown.appendChild(manageOpt);
+
+    // Restore previous selection if possible
+    if (allSkills.some(s => s.id === prevVal)) {
+      heroSkillDropdown.value = prevVal;
+    } else if (prevVal === '__custom_inline__' || prevVal === '__manage__') {
+      heroSkillDropdown.value = prevVal;
+    } else if (allSkills.length > 0) {
+      heroSkillDropdown.value = allSkills[0].id;
+    }
+  }
+
+  function renderSkillManageList() {
+    const customSkills = allSkills.filter(s => s.is_custom);
+    if (customSkills.length === 0) {
+      skillManageList.innerHTML = '<div class="skm-list-empty">暂无自定义 Skill</div>';
+    } else {
+      skillManageList.innerHTML = customSkills.map(s =>
+        `<div class="skm-list-item">
+          <span class="skm-list-item-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</span>
+          <button class="skm-list-item-del" data-id="${s.id}" title="删除">×</button>
+        </div>`
+      ).join('');
+      // Attach delete handlers
+      skillManageList.querySelectorAll('.skm-list-item-del').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.dataset.id;
+          try {
+            const resp = await fetch(`/api/skills/${id}`, { method: 'DELETE' });
+            if (resp.ok) {
+              await loadSkills();
+              renderSkillManageList();
+              // If we just deleted the last custom skill, close panel
+              if (!allSkills.some(s => s.is_custom)) {
+                closeManagePanel();
+              }
+            } else {
+              const err = await resp.json().catch(() => ({ detail: '未知错误' }));
+              showToast(`删除失败: ${err.detail}`);
+            }
+          } catch (e) {
+            showToast(`删除失败: ${e.message}`);
+          }
+        });
+      });
+    }
+  }
+
+  function closeManagePanel() {
+    skillManagePanel.style.display = 'none';
+    // Restore previous skill selection
+    const restore = prevSkillValue || (allSkills.length > 0 ? allSkills[0].id : null);
+    if (restore && heroSkillDropdown.querySelector(`option[value="${restore}"]`)) {
+      heroSkillDropdown.value = restore;
+      const skill = allSkills.find(s => s.id === restore);
+      sbSkillLabel.textContent = skill ? skill.name : restore;
+    }
+    // Clear form
+    skmNameInput.value = '';
+    skmContentInput.value = '';
+    skmError.style.display = 'none';
+  }
+
+  skmSaveBtn.addEventListener('click', async () => {
+    const name = skmNameInput.value.trim();
+    const content = skmContentInput.value.trim();
+    skmError.style.display = 'none';
+
+    if (!name) { skmError.textContent = '请输入 Skill 名称'; skmError.style.display = 'block'; return; }
+    if (name.length > 50) { skmError.textContent = '名称不能超过 50 个字符'; skmError.style.display = 'block'; return; }
+    if (!content) { skmError.textContent = '请输入 Skill 内容'; skmError.style.display = 'block'; return; }
+    if (content.length < 10) { skmError.textContent = '内容至少需要 10 个字符'; skmError.style.display = 'block'; return; }
+    if (content.length > 3000) { skmError.textContent = '内容不能超过 3000 个字符'; skmError.style.display = 'block'; return; }
+
+    try {
+      const resp = await fetch('/api/skills', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, content })
+      });
+      if (resp.ok) {
+        await loadSkills();
+        renderSkillManageList();
+        skmNameInput.value = '';
+        skmContentInput.value = '';
+        showToast(`已保存: ${name}`);
+      } else {
+        const err = await resp.json().catch(() => ({ detail: '未知错误' }));
+        skmError.textContent = err.detail || '保存失败';
+        skmError.style.display = 'block';
+      }
+    } catch (e) {
+      skmError.textContent = `保存失败: ${e.message}`;
+      skmError.style.display = 'block';
+    }
+  });
+
+  skmCancelBtn.addEventListener('click', closeManagePanel);
 
   // ── Session persistence via URL hash ──
   function saveSessionId(id) {
@@ -2632,15 +2920,36 @@
 
   async function submitIdea(idea) {
     showLoading('正在生成 3 个方案…（约 5-10 秒）');
-    // Get custom rules from hero skill dropdown if vibecoding, otherwise from old textarea
-    const customRules = selectedScenario === 'vibecoding'
-      ? (heroSkillDropdown.value === 'default' ? null : heroSkillDropdown.value)
-      : (customRulesInput.value.trim() || null);
+    // Determine skill_key and custom_rules based on dropdown value
+    let skillKey = null;
+    let customRules = null;
+
+    if (selectedScenario === 'vibecoding') {
+      const val = heroSkillDropdown.value;
+      if (val === '__custom_inline__') {
+        // Inline custom text — send as custom_rules directly
+        customRules = heroCustomInlineInput.value.trim() || null;
+        skillKey = null;
+      } else if (val === '__manage__') {
+        // Manage panel open — shouldn't submit in this state
+        showToast('请先选择一个 Skill 或关闭管理面板');
+        hideLoading();
+        return;
+      } else if (val) {
+        // A real skill selected — send its key
+        skillKey = val;
+        customRules = null;
+      }
+    } else {
+      // PPT: use old textarea
+      customRules = customRulesInput.value.trim() || null;
+    }
+
     try {
       const resp = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea, scenario: selectedScenario, custom_rules: customRules })
+        body: JSON.stringify({ idea, scenario: selectedScenario, custom_rules: customRules, skill_key: skillKey })
       });
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({ detail: '未知错误' }));
@@ -2663,8 +2972,6 @@
     blueprintBox.classList.remove('visible');
     taskSection.classList.remove('visible');
     promptSection.classList.remove('visible');
-    selRound.textContent = stateData.round;
-    selIdea.textContent = stateData.original_idea;
     renderCandidates(stateData.candidates);
     selectedCandidate = null;
     taskVotes = {};
@@ -2713,7 +3020,12 @@
       }
     }
 
-    // Restore custom rules
+    // Restore custom rules and skill key
+    if (json.skill_key && heroSkillDropdown.querySelector(`option[value="${json.skill_key}"]`)) {
+      heroSkillDropdown.value = json.skill_key;
+      const skill = allSkills.find(s => s.id === json.skill_key);
+      if (skill) sbSkillLabel.textContent = skill.name;
+    }
     if (json.custom_rules) {
       customRulesInput.value = json.custom_rules;
     }
@@ -2977,9 +3289,8 @@
     commentInput.value = '';
     ideaInput.value = '';
 
-    // Switch back to landing background video
-    if (landingBg) landingBg.style.display = 'block';
-    if (appBg) appBg.style.display = 'none';
+    // Switch back to landing background
+    landingBg.style.display = 'block';
 
     landingWrapper.classList.add('visible');
     appContainer.classList.remove('visible', 'hero-mode');
@@ -3004,7 +3315,12 @@
     heroIdeaInput.value = '';
     heroCharCount.textContent = '0/3,000';
     heroSkillSelect.style.display = 'none';
-    heroSkillDropdown.value = 'default';
+    heroCustomInline.style.display = 'none';
+    heroCustomInlineInput.value = '';
+    skillManagePanel.style.display = 'none';
+    skmNameInput.value = '';
+    skmContentInput.value = '';
+    skmError.style.display = 'none';
     headerDiv.style.display = '';
     statusBarEl.style.display = '';
     inputArea.style.display = 'none';

@@ -43,7 +43,7 @@ def _extract_json(text: str) -> dict | list:
 SCENARIO_LABELS = {"vibecoding": "Vibe Coding", "ppt": "PPT 制作"}
 
 
-def generate_candidates(idea: str, scenario: str, custom_rules: str | None = None) -> list[dict]:
+def generate_candidates(idea: str, scenario: str, custom_rules: str | None = None, skill_key: str | None = None) -> list[dict]:
     """Generate 3 candidate prompts from a vague idea."""
     client = _get_client()
     label = SCENARIO_LABELS[scenario]
@@ -51,7 +51,7 @@ def generate_candidates(idea: str, scenario: str, custom_rules: str | None = Non
         model=MODEL,
         max_tokens=6144,
         messages=[
-            {"role": "system", "content": build_round1_prompt(scenario, custom_rules)},
+            {"role": "system", "content": build_round1_prompt(scenario, custom_rules, skill_key)},
             {"role": "user", "content": f"请将以下模糊想法扩展为不同角度的{label}提示词：\n\n<idea>{idea}</idea>"}
         ]
     )
