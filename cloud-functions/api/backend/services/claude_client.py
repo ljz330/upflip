@@ -76,7 +76,7 @@ def generate_candidates(
     label = SCENARIO_LABELS[scenario]
     resp = client.chat.completions.create(
         model=model or _DEFAULT_MODEL,
-        max_tokens=4096,
+        max_tokens=6144,
         messages=[
             {"role": "system", "content": build_round1_prompt(scenario, custom_rules, skill_key)},
             {"role": "user", "content": f"请将以下模糊想法扩展为不同角度的{label}提示词：\n\n<idea>{idea}</idea>"}
@@ -254,7 +254,7 @@ def refine_prompt(
 
     resp = client.chat.completions.create(
         model=model or _DEFAULT_MODEL,
-        max_tokens=4096,
+        max_tokens=6144,
         messages=[
             {"role": "system", "content": build_roundn_prompt(scenario)},
             {"role": "user", "content": user_msg}
