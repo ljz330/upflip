@@ -6,3 +6,5 @@ venv/
 .claude/
 .claude-plugin/settings.json
 .vercel/
+
+.vercel
