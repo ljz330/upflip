@@ -47,15 +47,32 @@ async def health():
 @app.get("/debug")
 async def debug_info():
     """Return diagnostic info to help troubleshoot deployment issues."""
+    # Resolve the real backend path
+    _real_backend = os.path.abspath(_backend_dir)
+    _parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+    def _ls(path):
+        """List directory contents, return None if not found."""
+        try:
+            return sorted(os.listdir(path))
+        except Exception:
+            return None
+
     info = {
         "python_version": sys.version,
-        "sys_path": sys.path[:5],
-        "env_prefix": os.getenv("API_PREFIX"),
-        "env_edgeone": os.getenv("EDGEONE"),
+        "sys_path": [os.path.abspath(p) for p in sys.path[:5]],
         "cwd": os.getcwd(),
-        "backend_dir": _backend_dir,
+        "file": __file__,
+        "backend_dir_raw": _backend_dir,
+        "backend_dir_real": _real_backend,
+        "parent_dir": _parent,
+        # What files actually exist?
+        "ls_cwd": _ls(os.getcwd()),
+        "ls_parent": _ls(_parent),
+        "ls_backend": _ls(_real_backend),
+        "ls_backend_routes": _ls(os.path.join(_real_backend, "routes")),
     }
-    # Try importing the router to see if it works
+    # Try importing the router
     try:
         from routes.optimize import router as _test_router
         info["router_import"] = "ok"
